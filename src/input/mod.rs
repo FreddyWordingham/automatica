@@ -3,8 +3,6 @@ use bevy::prelude::*;
 mod constants;
 mod systems;
 
-use systems::*;
-
 pub struct InputPlugin;
 
 impl Plugin for InputPlugin {
