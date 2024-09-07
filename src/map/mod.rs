@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
+mod constants;
 mod resources;
 mod systems;
 
@@ -21,12 +22,12 @@ impl Plugin for MapPlugin {
     }
 }
 
-// SYSTEMS
-
+#[allow(dead_code)]
 fn report_cursor_pos(cursor_pos: Res<CursorPos>) {
     println!("Cursor in tile pos: {:?}", cursor_pos.0);
 }
 
+#[allow(dead_code)]
 fn report_cursor_index(cursor_index: Res<CursorIndex>) {
     println!("Cursor in tile index: {:?}", cursor_index.0);
 }

@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
+use super::super::constants::*;
+
 pub fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -8,9 +10,12 @@ pub fn setup(
 ) {
     commands.spawn(Camera2dBundle::default());
 
-    let texture_handle: Handle<Image> = asset_server.load("tiles.png");
+    let texture_handle: Handle<Image> = asset_server.load(TILE_SHEET_FILEPATH);
 
-    let map_size = TilemapSize { x: 32, y: 32 };
+    let map_size = TilemapSize {
+        x: MAP_WIDTH,
+        y: MAP_HEIGHT,
+    };
     let tilemap_entity = commands.spawn_empty().id();
     let mut tile_storage = TileStorage::empty(map_size);
 
@@ -28,7 +33,10 @@ pub fn setup(
         }
     }
 
-    let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
+    let tile_size = TilemapTileSize {
+        x: TILE_WIDTH,
+        y: TILE_HEIGHT,
+    };
     let grid_size = tile_size.into();
     let map_type = TilemapType::default();
 
@@ -45,7 +53,7 @@ pub fn setup(
 
     {
         array_texture_loader.add(TilemapArrayTexture {
-            texture: TilemapTexture::Single(asset_server.load("tiles.png")),
+            texture: TilemapTexture::Single(asset_server.load(TILE_SHEET_FILEPATH)),
             tile_size,
             ..Default::default()
         });
