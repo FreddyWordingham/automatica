@@ -1,3 +1,3 @@
-mod map;
+mod cursor_pos;
 
-pub use map::*;
+pub use cursor_pos::*;
