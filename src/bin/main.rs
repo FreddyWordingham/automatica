@@ -17,6 +17,7 @@ fn main() {
         )
         .add_plugins(InputPlugin)
         .add_plugins(MapPlugin)
+        .add_plugins(LogicPlugin)
         .add_systems(Startup, setup)
         .run();
 }
