@@ -13,30 +13,20 @@ impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(TilemapPlugin)
             .init_resource::<CursorPos>()
+            .init_resource::<CursorIndex>()
             .add_systems(Startup, setup)
-            .add_systems(First, update_cursor_pos)
-            .add_systems(Update, report_cursor_position);
+            .add_systems(First, (update_cursor_pos, update_cursor_index))
+        // .add_systems(Update, (report_cursor_pos, report_cursor_index))
+        ;
     }
 }
 
 // SYSTEMS
 
-fn report_cursor_position(
-    cursor_pos: Res<CursorPos>,
-    tilemap_q: Query<(&TilemapSize, &TilemapGridSize, &TilemapType, &Transform)>,
-) {
-    for (map_size, grid_size, map_type, map_transform) in tilemap_q.iter() {
-        let cursor_pos: Vec2 = cursor_pos.0;
-        let cursor_in_map_pos: Vec2 = {
-            let cursor_pos = Vec4::from((cursor_pos, 0.0, 1.0));
-            let cursor_in_map_pos = map_transform.compute_matrix().inverse() * cursor_pos;
-            cursor_in_map_pos.xy()
-        };
+fn report_cursor_pos(cursor_pos: Res<CursorPos>) {
+    println!("Cursor in tile pos: {:?}", cursor_pos.0);
+}
 
-        if let Some(tile_pos) =
-            TilePos::from_world_pos(&cursor_in_map_pos, map_size, grid_size, map_type)
-        {
-            println!("Cursor in tile pos: {:?}", tile_pos);
-        }
-    }
+fn report_cursor_index(cursor_index: Res<CursorIndex>) {
+    println!("Cursor in tile index: {:?}", cursor_index.0);
 }
