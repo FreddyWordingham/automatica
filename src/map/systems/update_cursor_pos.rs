@@ -1,27 +1,17 @@
 use bevy::prelude::*;
-use bevy_ecs_tilemap::prelude::*;
 
 use super::super::resources::*;
 
 pub fn update_cursor_pos(
-    tilemap_q: Query<(&TilemapSize, &TilemapGridSize, &TilemapType, &Transform)>,
-    cursor_pos: Res<CursorPos>,
-    mut cursor_index: ResMut<CursorIndex>,
+    camera_q: Query<(&GlobalTransform, &Camera)>,
+    mut cursor_moved_events: EventReader<CursorMoved>,
+    mut cursor_pos: ResMut<CursorPos>,
 ) {
-    for (map_size, grid_size, map_type, map_transform) in tilemap_q.iter() {
-        let cursor_pos: Vec2 = cursor_pos.0;
-        let cursor_in_map_pos: Vec2 = {
-            let cursor_pos = Vec4::from((cursor_pos, 0.0, 1.0));
-            let cursor_in_map_pos = map_transform.compute_matrix().inverse() * cursor_pos;
-            cursor_in_map_pos.xy()
-        };
-
-        *cursor_index = if let Some(tile_pos) =
-            TilePos::from_world_pos(&cursor_in_map_pos, map_size, grid_size, map_type)
-        {
-            CursorIndex(Some(UVec2::new(tile_pos.x, tile_pos.y)))
-        } else {
-            CursorIndex(None)
-        };
+    for cursor_moved in cursor_moved_events.read() {
+        for (cam_t, cam) in camera_q.iter() {
+            if let Some(pos) = cam.viewport_to_world_2d(cam_t, cursor_moved.position) {
+                *cursor_pos = CursorPos(pos);
+            }
+        }
     }
 }

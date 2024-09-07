@@ -14,10 +14,11 @@ impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(TilemapPlugin)
             .init_resource::<CursorPos>()
-            .init_resource::<CursorIndex>()
+            .init_resource::<CursorTile>()
             .add_systems(Startup, setup)
-            .add_systems(First, (update_cursor_pos, update_cursor_index))
-        // .add_systems(Update, (report_cursor_pos, report_cursor_index))
+            .add_systems(First, (update_cursor_pos, update_cursor_tile))
+    .add_systems(Update, change_tile_colour)
+        // .add_systems(Update, (report_cursor_pos, report_cursor_tile))
         ;
     }
 }
@@ -28,6 +29,6 @@ fn report_cursor_pos(cursor_pos: Res<CursorPos>) {
 }
 
 #[allow(dead_code)]
-fn report_cursor_index(cursor_index: Res<CursorIndex>) {
-    println!("Cursor in tile index: {:?}", cursor_index.0);
+fn report_cursor_tile(cursor_tile: Res<CursorTile>) {
+    println!("Cursor in tile index: {:?}", cursor_tile.0);
 }
